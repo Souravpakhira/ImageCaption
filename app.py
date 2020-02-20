@@ -1,4 +1,4 @@
-
+import os
 from flask import Flask, render_template, url_for, request, redirect, send_from_directory
 import tensorflow as tf
 from caption1 import *
@@ -25,14 +25,17 @@ def set_response_headers(response):
 
 @app.route('/', methods = ['GET','POST'])
 def upload_file():
+    try:
+        os.system("find static/ -name "*jpg" -mmin +5 -delete")
+    except OSError:
+        pass
     if request.method == 'POST':
         img = request.files['image']
-        cname= "sourav.jpg"
-        img.save("static/"+ cname)
+        img.save("static/"+ img.filename)
         with graph.as_default():
-            caption = caption_this_image("static/"+ cname)
+            caption = caption_this_image("static/"+ img.filename)
         
-        result_dic = {'image' : "static/" + cname,
+        result_dic = {'image' : "static/" + img.filename,
 			'description' : caption}
         return render_template('success.html', results = result_dic)
     return render_template('upload.html')
