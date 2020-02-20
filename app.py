@@ -26,7 +26,7 @@ def set_response_headers(response):
 @app.route('/', methods = ['GET','POST'])
 def upload_file():
     try:
-        os.system("find static/ -name "*jpg" -mmin +5 -delete")
+        os.system("find static/ -name '*.jpg' -mmin +5 -delete")
     except OSError:
         pass
     if request.method == 'POST':
